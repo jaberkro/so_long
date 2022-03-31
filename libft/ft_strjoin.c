@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/22 20:59:15 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/02/26 16:21:59 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/03/31 13:48:14 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	i = 0;
 	if (!s2 || ft_strncmp(s2, "", 1) == 0 || (!s2 && !s1))
 		return (NULL);
-	if (!s1)
-		return ((char *)s2);
+	// if (!s1)
+	// 	return ((char *)s2);
 	len = ft_strlen(s1) + ft_strlen(s2);
 	out = ft_calloc(len + 1, 1);
 	if (out == NULL)

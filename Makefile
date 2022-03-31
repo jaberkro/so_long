@@ -6,13 +6,13 @@
 #    By: jaberkro <jaberkro@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2022/03/29 16:11:58 by jaberkro      #+#    #+#                  #
-#    Updated: 2022/03/30 14:34:16 by jaberkro      ########   odam.nl          #
+#    Updated: 2022/03/31 16:01:53 by jaberkro      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = so_long	
-INC = -I ./include
-FLAGS = -Wall -Wextra -Werror
+INC = -I ./include -I ./libft -I ./MLX42/include/MLX42
+FLAGS = -Wall -Wextra -Werror -fsanitize=address -g
 
 LIBFT_DIR = libft/
 LIBFT = libft/libft.a
@@ -23,7 +23,7 @@ MLX = MLX42/libmlx42.a
 SRC_DIR = src
 BUILD_DIR = obj
 
-SRC = src/main.c
+SRC = src/main.c src/parsing.c src/scan_file.c src/error.c src/graphics.c
 
 OBJ = $(subst $(SRC_DIR), $(BUILD_DIR), $(SRC:.c=.o))
 
@@ -35,15 +35,15 @@ GREEN	= \x1b[32m
 RED		= \x1b[31m
 RESET	= \x1b[0m
 
-all: $(BUILD_DIR) $(NAME)
+all: $(BUILD_DIR) $(LIBFT) $(MLX) $(NAME)
 
 $(BUILD_DIR):
-	mkdir $(BUILD_DIR)
+	mkdir -p $(BUILD_DIR)
 
-$(NAME): $(LIBFT) $(MLX) $(OBJ)
+$(NAME): $(OBJ)
 	cp $(LIBFT) ./$(NAME)
 	cp $(MLX) ./$(NAME)
-	gcc $(FLAGS) $(OBJ) $(LIBFT) $(MLX) $(INC) -lglfw -L "/Users/Jaberkro/.brew/opt/glfw/lib/" -o $(NAME)
+	gcc $(FLAGS) $(OBJ) $(LIBFT) $(MLX) $(INC) -lglfw -L "$$HOME/.brew/opt/glfw/lib/" -o $(NAME)
 	@echo "$(RED)Done $(GREEN)COM$(YELLOW)PI$(BLUE)LING $(PINK)SO_LONG$(RESET) :)"
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
@@ -56,7 +56,7 @@ $(MLX):
 	$(MAKE) -C $(MLX_DIR)
 
 clean:
-	rm -f $(OBJ)
+	rm -rf $(BUILD_DIR)
 	$(MAKE) fclean -C $(LIBFT_DIR)
 	$(MAKE) fclean -C $(MLX_DIR)
 	@echo "$(RED)Done $(GREEN)CLEANING$(YELLOW) SO_LONG$(PINK) :)$(RESET)"
@@ -67,4 +67,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re $(LIBFT) $(MLX)
