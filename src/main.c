@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/02/10 14:01:18 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/03/31 19:43:34 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/03/31 21:45:32 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@
 #include <fcntl.h>
 
 #define MULT 50
-mlx_image_t	*g_img;
 
 void	update_map(int x, int y, void **input, int *done)
 {
@@ -46,7 +45,6 @@ void	update_map(int x, int y, void **input, int *done)
 				map->px += x;
 				map->map[map->py][map->px] = 'E';
 				*done = 1;	
-				ft_printf("win!\n");
 			}
 		}
 		else 
@@ -60,33 +58,38 @@ void	update_map(int x, int y, void **input, int *done)
 		}
 		draw_background(background, map, MULT);
 		mlx_image_to_window(mlx, background, 0, 0);
-		
 	}
 }
 
-void	hook(void *input)
+ void my_keyhook(mlx_key_data_t keydata, void* param)
 {
-	t_gameinfo *gameinfo;
-	mlx_t		*param;
-	t_map		*map;
-	mlx_image_t	*background;
 	int			done;
+	t_gameinfo	*gameinfo;
+	mlx_t		*mlx;
+	int			i;
+	static int	steps = 0;
 
+	i = 0;
+	gameinfo = param;
+	mlx = *(gameinfo->mlx);
 	done = 0;
-	gameinfo = input;
-	param = *(gameinfo->mlx);
-	map = *(gameinfo->map);
-	background = *(gameinfo->background);
-	if (mlx_is_key_down(param, MLX_KEY_UP))
-		update_map(0, -1, &input, &done);
-	if (mlx_is_key_down(param, MLX_KEY_DOWN))
-		update_map(0, 1, &input, &done);
-	if (mlx_is_key_down(param, MLX_KEY_LEFT))
-		update_map(-1, 0, &input, &done);
-	if (mlx_is_key_down(param, MLX_KEY_RIGHT))
-		update_map(1, 0, &input, &done);
-	if (mlx_is_key_down(param, MLX_KEY_ESCAPE))// || done)
-		mlx_close_window(param);
+	if (keydata.key == MLX_KEY_W && keydata.action == MLX_PRESS)
+		update_map(0, -1, &param, &done);
+	else if (keydata.key == MLX_KEY_S && keydata.action == MLX_PRESS)
+		update_map(0, 1, &param, &done);
+	else if (keydata.key == MLX_KEY_A && keydata.action == MLX_PRESS)
+		update_map(-1, 0, &param, &done);
+	else if (keydata.key == MLX_KEY_D && keydata.action == MLX_PRESS)
+		update_map(1, 0, &param, &done);
+	if (done || (keydata.key == MLX_KEY_ESCAPE && keydata.action == MLX_PRESS))
+		mlx_close_window(mlx);
+	if ((keydata.key == MLX_KEY_W || keydata.key == MLX_KEY_S || \
+		keydata.key == MLX_KEY_A || keydata.key == MLX_KEY_D) && 
+		keydata.action == MLX_PRESS)
+	{
+		steps++;
+		ft_printf("movements:%d\n", steps);
+	}
 }
 
 int32_t	main(void)
@@ -101,7 +104,6 @@ int32_t	main(void)
 	this_map = init_map(fd);
 	if (!this_map)
 		return (1);
-	// ft_printf("mapvalues:\nwidth: %d\nheight: %d\nmap:\n%s\n%s\n%s\n%s\n%s\n%s\n", this_map->width, this_map->height, this_map->map[0], this_map->map[1], this_map->map[2], this_map->map[3], this_map->map[4], this_map->map[5]);
 	mlx = mlx_init(this_map->width * MULT, this_map->height * MULT, "SO_LONG", true);
 	if (!mlx)
 		exit(EXIT_FAILURE);
@@ -114,7 +116,7 @@ int32_t	main(void)
 	gameinfo->background = &background;
 	draw_background(background, this_map, MULT);
 	mlx_image_to_window(mlx, background, 0, 0);
-	mlx_loop_hook(mlx, &hook, gameinfo);
+	mlx_key_hook(mlx, &my_keyhook, gameinfo);
 	mlx_loop(mlx);
 	mlx_terminate(mlx);
 	return (EXIT_SUCCESS);

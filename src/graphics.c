@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/03/31 15:52:24 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/03/31 17:28:03 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/03/31 20:46:32 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,15 +43,15 @@ void    draw_background(mlx_image_t* img, t_map *map, int size)
         while (j < map->width)
         {
             if (map->map[i][j] == '1')
-                draw_square(img, j * size, i * size, size, 0xff00ffff);
+                draw_square(img, j * size, i * size, size, 0x000000ff);
             else
-                draw_square(img, j * size, i * size, size, 0x00ff00ff);
+                draw_square(img, j * size, i * size, size, 0xffffffff);
             if (map->map[i][j] == 'P')
                 draw_square(img, j * size + size / 10, i * size + size / 10, size * 0.8, 0x0000ffff);
             if (map->map[i][j] == 'C')
-                draw_square(img, j * size + size / 10, i * size + size / 10, size * 0.8, 0xff0000ff);
+                draw_square(img, j * size + size / 10, i * size + size / 10, size * 0.8, 0xffee00ff);
              if (map->map[i][j] == 'E')
-                draw_square(img, j * size + size / 10, i * size + size / 10, size * 0.8, 0xffffffff);
+                draw_square(img, j * size + size / 10, i * size + size / 10, size * 0.8, 0xff0000ff);
             j++;
         }
         i++;
