@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/03/31 15:25:29 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/03/31 15:36:31 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/03/31 17:43:29 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,19 +26,23 @@ static int	error_message(char *message)
 	return (0);
 }
 
-static int	error_check_char(t_map *this_map, int i, int j)
+static int	error_check_char(t_map **this_map, int i, int j)
 {
-	if (is_valid(this_map->map[i][j]) == 0)
+	if (is_valid((*this_map)->map[i][j]) == 0)
 		return (error_message("Error\nMap has invalid char"));
-	if ((i == 0 || i == this_map->height - 1 || j == 0 || \
-		j == this_map->width - 1) && this_map->map[i][j] != '1')
+	if ((i == 0 || i == (*this_map)->height - 1 || j == 0 || \
+		j == (*this_map)->width - 1) && (*this_map)->map[i][j] != '1')
 		return (error_message("Error\nMap has incomplete borders"));
-	if (this_map->map[i][j] == 'P')
-		(this_map->p_count)++;
-	else if (this_map->map[i][j] == 'C')
-		(this_map->c_count)++;
-	else if (this_map->map[i][j] == 'E')
-		(this_map->e_count)++;
+	if ((*this_map)->map[i][j] == 'P')
+	{
+		((*this_map)->p_count)++;
+		(*this_map)->px = j;
+		(*this_map)->py = i;
+	}
+	else if ((*this_map)->map[i][j] == 'C')
+		((*this_map)->c_count)++;
+	else if ((*this_map)->map[i][j] == 'E')
+		((*this_map)->e_count)++;
 	return (1);
 }
 
@@ -55,7 +59,7 @@ int	error_check(t_map *this_map)
 			return (error_message("Error\nMap is not rectangle")); 
 		while (j < this_map->width)
 		{
-			if (error_check_char(this_map, i, j) == 0)
+			if (error_check_char(&this_map, i, j) == 0)
 				return (0);
 			j++;
 		}

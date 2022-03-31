@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/03/30 15:14:21 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/03/31 15:26:33 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/03/31 19:08:11 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,9 @@ t_map	*init_map(int fd)
 	if (!new_map)
 		return (NULL);
 	new_map->p_count = 0;
-	new_map->c_count = 0;
 	new_map->e_count = 0;
+	new_map->c_count = 0;
+	new_map->c_found = 0;
 	new_map->width = width;
 	new_map->height = height;
 	new_map->map = map_values;
