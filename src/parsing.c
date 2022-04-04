@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/03/30 15:14:21 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/03/31 19:08:11 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/04/04 14:38:21 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ t_map	*init_map(int fd)
 	t_map	*new_map;
 	int		width;
 	int		height;
-	
+
 	map_values = read_split(fd, &width, &height);
 	new_map = malloc(sizeof(t_map));
 	if (!new_map)
@@ -59,11 +59,10 @@ t_map	*init_map(int fd)
 	return (new_map);
 }
 
-
 // int	find_width_height(int fd, size_t *width, size_t *height)
 // {
 // 	char	*s;
-	
+
 // 	s = get_next_line(fd);
 // 	*width = ft_strlen(s);
 // 	*height = 0;
@@ -107,7 +106,6 @@ t_map	*init_map(int fd)
 // 	ft_printf("width:%d, height:%d\n", width, height);
 // 	return (map);
 // }
-
 
 // void	print_map(char map[1000][1000])
 // {

@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/03/31 15:25:29 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/03/31 17:43:29 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/04/04 14:41:51 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int	error_check(t_map *this_map)
 	{
 		j = 0;
 		if (ft_strlen(this_map->map[i]) != (size_t)this_map->width)
-			return (error_message("Error\nMap is not rectangle")); 
+			return (error_message("Error\nMap is not rectangle"));
 		while (j < this_map->width)
 		{
 			if (error_check_char(&this_map, i, j) == 0)
@@ -66,7 +66,7 @@ int	error_check(t_map *this_map)
 		i++;
 	}
 	if (this_map->p_count == 0)
-		return (error_message("Error\nAmount of player starting positions is 0"));
+		return (error_message("Error\nNo player starting position"));
 	if (this_map->e_count == 0)
 		return (error_message("Error\nAmount of exits is 0"));
 	if (this_map->c_count == 0)

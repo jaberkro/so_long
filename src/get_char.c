@@ -6,13 +6,11 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/03/30 19:23:15 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/03/31 14:11:31 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/04/04 14:35:46 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <fcntl.h>
-#include "so_long.h"
-#include "libft.h"
 
 char	get_char(int fd)
 {

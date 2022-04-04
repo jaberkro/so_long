@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/02/10 14:01:18 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/03/31 21:45:32 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/04/04 14:40:46 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 
 void	update_map(int x, int y, void **input, int *done)
 {
-	t_gameinfo *gameinfo;
+	t_gameinfo	*gameinfo;
 	mlx_t		*mlx;
 	t_map		*map;
 	mlx_image_t	*background;
@@ -38,16 +38,16 @@ void	update_map(int x, int y, void **input, int *done)
 	{
 		if (map->map[map->py + y][map->px + x] == 'E')
 		{
-		 	if (map->c_found == map->c_count)
+			if (map->c_found == map->c_count)
 			{
 				map->map[map->py][map->px] = '0';
 				map->py += y;
 				map->px += x;
 				map->map[map->py][map->px] = 'E';
-				*done = 1;	
+				*done = 1;
 			}
 		}
-		else 
+		else
 		{
 			if (map->map[map->py + y][map->px + x] == 'C')
 				map->c_found++;
@@ -61,7 +61,7 @@ void	update_map(int x, int y, void **input, int *done)
 	}
 }
 
- void my_keyhook(mlx_key_data_t keydata, void* param)
+void	my_keyhook(mlx_key_data_t keydata, void *param)
 {
 	int			done;
 	t_gameinfo	*gameinfo;
@@ -84,7 +84,7 @@ void	update_map(int x, int y, void **input, int *done)
 	if (done || (keydata.key == MLX_KEY_ESCAPE && keydata.action == MLX_PRESS))
 		mlx_close_window(mlx);
 	if ((keydata.key == MLX_KEY_W || keydata.key == MLX_KEY_S || \
-		keydata.key == MLX_KEY_A || keydata.key == MLX_KEY_D) && 
+		keydata.key == MLX_KEY_A || keydata.key == MLX_KEY_D) && \
 		keydata.action == MLX_PRESS)
 	{
 		steps++;

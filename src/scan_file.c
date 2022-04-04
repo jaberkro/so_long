@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/03/31 12:42:18 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/03/31 14:10:53 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/04/04 14:37:10 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ char	*scan_file(int fd)
 	while (42)
 	{
 		bytes_read = read(fd, buf, sizeof(buf) - 1);
-		if (bytes_read < 0) {
+		if (bytes_read < 0)
+		{
 			free(output);
 			return (NULL);
 		}
@@ -34,7 +35,7 @@ char	*scan_file(int fd)
 		buf[bytes_read] = '\0';
 		old_output = output;
 		output = ft_strjoin(output, buf);
-		free (old_output);
+		free(old_output);
 	}
 	return (output);
 }
