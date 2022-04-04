@@ -6,57 +6,102 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/03/30 15:14:21 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/04/04 14:38:21 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/04/04 18:14:29 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "so_long.h"
 
-char	**read_split(int fd, int *width, int *height)
+
+// char	**read_split(int fd, int *width, int *height)
+// {
+// 	char	*input;
+// 	char	**splitted;
+
+// 	*height = 0;
+// 	input = scan_file(fd);
+// 	splitted = ft_split(input, '\n');
+// 	if (!splitted)
+// 	{
+// 		free(input);
+// 		return (NULL);
+// 	}
+// 	while (splitted[*height])
+// 		(*height)++;
+// 	*width = ft_strlen(splitted[0]);
+// 	return (splitted);
+// }
+
+// // void	init_map_values(t_map **new_map)
+// {
+// 	int	size;
+
+// 	(*new_map)->p_count = 0;
+// 	(*new_map)->e_count = 0;
+// 	(*new_map)->c_count = 0;
+// 	// (*new_map)->player->px = -1;
+// 	// (*new_map)->player->py = -1;
+// 	(*new_map)->player->c_found = 0;
+// 	(*new_map)->player->movements = 0;
+// 	if ((*new_map)->w < 30 && (*new_map)->h < 30)
+// 		size = 50;
+// 	else
+// 		size = 30;
+// 	(*new_map)->sqw = size;
+// 	(*new_map)->sqh = size;
+// }
+
+// t_map	*init_map(int fd)
+// {
+// 	char	**map_values;
+// 	t_map	*new_map;
+// 	int		width;
+// 	int		height;
+
+// 	map_values = read_split(fd, &width, &height);
+// 	new_map = malloc(sizeof(t_map));
+// 	if (!new_map)
+// 		return (NULL);
+// 	new_map->player = malloc(sizeof(t_player));
+// 	if (!new_map->player)
+// 		return (NULL);
+// 	new_map->w = width;
+// 	new_map->h = height;
+// 	new_map->map = map_values;
+// 	init_map_values(&new_map);
+// 	if (error_check(new_map) == 0)
+// 	{
+// 		free(map_values);
+// 		free(new_map);
+// 		return (NULL);
+// 	}
+// 	return (new_map);
+// }
+
+void	print_map(char **map)
 {
-	char	*input;
-	char	**splitted;
+	int	i;
+	int	j;
 
-	*height = 0;
-	input = scan_file(fd);
-	splitted = ft_split(input, '\n');
-	if (!splitted)
+	j = 0;
+	i = 0;
+	while (map[j])
 	{
-		free(input);
-		return (NULL);
+		i = 0;
+		if (map[j][i] == '\0')
+			break ;
+		while (map[j][i])
+		{
+			if (map[j][i] == '\0')
+				break ;
+			ft_printf("%c", map[j][i]);
+			i++;
+		}
+		ft_printf("\n");
+		j++;
 	}
-	while (splitted[*height])
-		(*height)++;
-	*width = ft_strlen(splitted[0]);
-	return (splitted);
-}
-
-t_map	*init_map(int fd)
-{
-	char	**map_values;
-	t_map	*new_map;
-	int		width;
-	int		height;
-
-	map_values = read_split(fd, &width, &height);
-	new_map = malloc(sizeof(t_map));
-	if (!new_map)
-		return (NULL);
-	new_map->p_count = 0;
-	new_map->e_count = 0;
-	new_map->c_count = 0;
-	new_map->c_found = 0;
-	new_map->width = width;
-	new_map->height = height;
-	new_map->map = map_values;
-	if (error_check(new_map) == 0)
-	{
-		free(map_values);
-		free(new_map);
-		return (NULL);
-	}
-	return (new_map);
+	ft_printf("\n");
 }
 
 // int	find_width_height(int fd, size_t *width, size_t *height)
@@ -107,30 +152,6 @@ t_map	*init_map(int fd)
 // 	return (map);
 // }
 
-// void	print_map(char map[1000][1000])
-// {
-// 	int	i;
-// 	int	j;
-
-// 	j = 0;
-// 	i = 0;
-// 	while (map[j][i])
-// 	{
-// 		i = 0;
-// 		if (map[j][i] == '\0')
-// 			break ;
-// 		while (map[j][i])
-// 		{
-// 			if (map[j][i] == '\0')
-// 				break ;
-// 			ft_printf("%c", map[j][i]);
-// 			i++;
-// 		}
-// 		ft_printf("\n");
-// 		j++;
-// 	}
-// 	ft_printf("\n");
-// }
 
 // int	parsing(int fd)
 // {

@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/03/31 15:25:29 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/04/04 14:41:51 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/04/04 18:13:08 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,50 +26,50 @@ static int	error_message(char *message)
 	return (0);
 }
 
-static int	error_check_char(t_map **this_map, int i, int j)
+int	check_char(t_gameinfo *ginfo, int i, int j)
 {
-	if (is_valid((*this_map)->map[i][j]) == 0)
+	if (is_valid((*ginfo).map[i][j]) == 0)
 		return (error_message("Error\nMap has invalid char"));
-	if ((i == 0 || i == (*this_map)->height - 1 || j == 0 || \
-		j == (*this_map)->width - 1) && (*this_map)->map[i][j] != '1')
+	if ((i == 0 || i == (*ginfo).h - 1 || j == 0 || \
+		j == (*ginfo).w - 1) && (*ginfo).map[i][j] != '1')
 		return (error_message("Error\nMap has incomplete borders"));
-	if ((*this_map)->map[i][j] == 'P')
+	if ((*ginfo).map[i][j] == 'P')
 	{
-		((*this_map)->p_count)++;
-		(*this_map)->px = j;
-		(*this_map)->py = i;
+		(*ginfo).p++;
+		(*ginfo).player.px = j;
+		(*ginfo).player.py = i;
 	}
-	else if ((*this_map)->map[i][j] == 'C')
-		((*this_map)->c_count)++;
-	else if ((*this_map)->map[i][j] == 'E')
-		((*this_map)->e_count)++;
+	else if ((*ginfo).map[i][j] == 'C')
+		(*ginfo).c++;
+	else if ((*ginfo).map[i][j] == 'E')
+		(*ginfo).e++;
 	return (1);
 }
 
-int	error_check(t_map *this_map)
+int	check_map(t_gameinfo *ginfo)
 {
 	int	i;
 	int	j;
 
 	i = 0;
-	while (i < this_map->height)
+	while (i < (*ginfo).h)
 	{
 		j = 0;
-		if (ft_strlen(this_map->map[i]) != (size_t)this_map->width)
+		if (ft_strlen((*ginfo).map[i]) != (size_t)(*ginfo).w)
 			return (error_message("Error\nMap is not rectangle"));
-		while (j < this_map->width)
+		while (j < (*ginfo).w)
 		{
-			if (error_check_char(&this_map, i, j) == 0)
+			if (check_char(ginfo, i, j) == 0)
 				return (0);
 			j++;
 		}
 		i++;
 	}
-	if (this_map->p_count == 0)
+	if ((*ginfo).p == 0)
 		return (error_message("Error\nNo player starting position"));
-	if (this_map->e_count == 0)
+	if ((*ginfo).e == 0)
 		return (error_message("Error\nAmount of exits is 0"));
-	if (this_map->c_count == 0)
+	if ((*ginfo).c == 0)
 		return (error_message("Error\nAmount of collectibles is 0"));
 	return (1);
 }
