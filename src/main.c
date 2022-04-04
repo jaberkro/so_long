@@ -6,52 +6,48 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/02/10 14:01:18 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/04/04 18:41:22 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/04/04 22:35:55 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "MLX42.h"
 #include "so_long.h"
-#include "libft.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <memory.h>
 #include <fcntl.h>
+
+void	move_player(t_gameinfo *ginfo, int x, int y, char c)
+{
+	ginfo->map[ginfo->player.py][ginfo->player.px] = '0';
+	ginfo->player.py += y;
+	ginfo->player.px += x;
+	ginfo->player.moves++;
+	ginfo->map[ginfo->player.py][ginfo->player.px] = c;
+}
 
 void	update_map(int x, int y, void **input, int *done)
 {
-	t_gameinfo	*gameinfo;
+	t_gameinfo	*ginfo;
 	int			i;
 
 	i = 0;
-	gameinfo = *input;
-	if (gameinfo->map[gameinfo->player.py + y][gameinfo->player.px + x] != '1')
+	ginfo = *input;
+	if (ginfo->map[ginfo->player.py + y][ginfo->player.px + x] != '1')
 	{
-		if (gameinfo->map[gameinfo->player.py + y][gameinfo->player.px + x] == 'E')
+		if (ginfo->map[ginfo->player.py + y][ginfo->player.px + x] == 'E')
 		{
-			if (gameinfo->player.c_found == gameinfo->c)
+			if (ginfo->player.c_found == ginfo->c)
 			{
-				gameinfo->map[gameinfo->player.py][gameinfo->player.px] = '0';
-				gameinfo->player.py += y;
-				gameinfo->player.px += x;
-				gameinfo->map[gameinfo->player.py][gameinfo->player.px] = 'E';
-				gameinfo->player.moves++;
+				move_player(ginfo, x, y, 'E');
 				*done = 1;
 			}
 		}
 		else
 		{
-			if (gameinfo->map[gameinfo->player.py + y][gameinfo->player.px + x] == 'C')
-				gameinfo->player.c_found++;
-			gameinfo->map[gameinfo->player.py][gameinfo->player.px] = '0';
-			gameinfo->player.py += y;
-			gameinfo->player.px += x;
-			gameinfo->map[gameinfo->player.py][gameinfo->player.px] = 'P';
-			gameinfo->player.moves++;
+			if (ginfo->map[ginfo->player.py + y][ginfo->player.px + x] == 'C')
+				ginfo->player.c_found++;
+			move_player(ginfo, x, y, 'P');
 		}
-		draw_background(gameinfo);
-		mlx_image_to_window(gameinfo->mlx, gameinfo->img, 0, 0);
+		draw_image(ginfo);
+		mlx_image_to_window(ginfo->mlx, ginfo->img, 0, 0);
+		ft_printf("moves:%d\n", ginfo->player.moves);
 	}
 }
 
@@ -72,29 +68,47 @@ void	my_keyhook(mlx_key_data_t keydata, void *param)
 		update_map(1, 0, &param, &done);
 	if (done || (keydata.key == MLX_KEY_ESCAPE && keydata.action == MLX_PRESS))
 		mlx_close_window(gameinfo->mlx);
-	if (keydata.action == MLX_PRESS)
-		ft_printf("movements:%d\n", gameinfo->player.moves);
 }
 
-int32_t	main(void)
+void	update_size(int32_t width, int32_t height, void *param)
+{
+	t_gameinfo	*gameinfo;
+
+	gameinfo = param;
+	if (width / gameinfo->w > height / gameinfo->h)
+		gameinfo->size = height / gameinfo->h;
+	else
+		gameinfo->size = width / gameinfo->w;
+	if (!mlx_resize_image(gameinfo->img, width, height))
+		exit(EXIT_FAILURE);
+	draw_image(gameinfo);
+	mlx_image_to_window(gameinfo->mlx, gameinfo->img, 0, 0);
+}
+
+int32_t	main(int argc, char **argv)
 {
 	int			fd;
-	t_gameinfo	gameinfo;
+	t_gameinfo	g;
 
-	fd = open("maps/map1.ber", O_RDONLY);
-	init_gameinfo(&gameinfo, fd);
-	if (!gameinfo.map)
+	if (argc != 2)
+		return (error_message("Format:\n./so_long yourMapname.ber\n"));
+	fd = open(argv[1], O_RDONLY);
+	init_gameinfo(&g, fd);
+	close(fd);
+	if (!g.map)
 		return (EXIT_FAILURE);
-	// print_map(gameinfo.map);
-	gameinfo.mlx = mlx_init(gameinfo.w * gameinfo.size, gameinfo.h * gameinfo.size, "SO_LONG", true);
-	if (!gameinfo.mlx)
-	 	exit(EXIT_FAILURE);
-	gameinfo.img = mlx_new_image(gameinfo.mlx, gameinfo.w * gameinfo.size, gameinfo.h * gameinfo.size);
-
-	draw_background(&gameinfo);
-	mlx_image_to_window(gameinfo.mlx, gameinfo.img, 0, 0);
-	mlx_key_hook(gameinfo.mlx, &my_keyhook, &gameinfo);
-	mlx_loop(gameinfo.mlx);
-	mlx_terminate(gameinfo.mlx);
+	g.mlx = mlx_init(g.w * g.size, g.h * g.size, "SO_LONG", true);
+	if (!g.mlx)
+		exit(EXIT_FAILURE);
+	g.img = mlx_new_image(g.mlx, g.w * g.size, g.h * g.size);
+	if (!g.img)
+		exit(EXIT_FAILURE);
+	draw_image(&g);
+	mlx_image_to_window(g.mlx, g.img, 0, 0);
+	mlx_key_hook(g.mlx, &my_keyhook, &g);
+	mlx_resize_hook(g.mlx, &update_size, &g);
+	mlx_loop(g.mlx);
+	mlx_terminate(g.mlx);
+	free_return_map(&g);
 	return (EXIT_SUCCESS);
 }

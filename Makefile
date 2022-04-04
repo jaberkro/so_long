@@ -6,13 +6,13 @@
 #    By: jaberkro <jaberkro@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2022/03/29 16:11:58 by jaberkro      #+#    #+#                  #
-#    Updated: 2022/04/04 17:00:59 by jaberkro      ########   odam.nl          #
+#    Updated: 2022/04/04 22:36:04 by jaberkro      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = so_long	
 INC = -I ./include -I ./libft -I ./MLX42/include/MLX42
-FLAGS = -Wall -Wextra -Werror -fsanitize=address -g
+FLAGS = -Wall -Wextra -Werror
 
 LIBFT_DIR = libft/
 LIBFT = libft/libft.a
@@ -23,8 +23,7 @@ MLX = MLX42/libmlx42.a
 SRC_DIR = src
 BUILD_DIR = obj
 
-SRC = src/main.c src/parsing.c src/scan_file.c src/error.c src/graphics.c \
-	src/init.c
+SRC = src/main.c src/scan_file.c src/error.c src/graphics.c src/init.c
 
 OBJ = $(subst $(SRC_DIR), $(BUILD_DIR), $(SRC:.c=.o))
 
