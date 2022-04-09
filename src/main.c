@@ -6,20 +6,19 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/02/10 14:01:18 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/04/09 14:08:03 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/04/09 18:36:27 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
-#include <fcntl.h>
 
 void	move_player(t_gameinfo *ginfo, int x, int y, char c)
 {
-	ginfo->map[ginfo->player.py][ginfo->player.px] = '0';
-	ginfo->player.py += y;
-	ginfo->player.px += x;
+	ginfo->map[ginfo->player.posy][ginfo->player.posx] = '0';
+	ginfo->player.posy += y;
+	ginfo->player.posx += x;
 	ginfo->player.moves++;
-	ginfo->map[ginfo->player.py][ginfo->player.px] = c;
+	ginfo->map[ginfo->player.posy][ginfo->player.posx] = c;
 }
 
 void	update_map(int x, int y, void **input, int *done)
@@ -29,11 +28,11 @@ void	update_map(int x, int y, void **input, int *done)
 
 	i = 0;
 	ginfo = *input;
-	if (ginfo->map[ginfo->player.py + y][ginfo->player.px + x] != '1')
+	if (ginfo->map[ginfo->player.posy + y][ginfo->player.posx + x] != '1')
 	{
-		if (ginfo->map[ginfo->player.py + y][ginfo->player.px + x] == 'E')
+		if (ginfo->map[ginfo->player.posy + y][ginfo->player.posx + x] == 'E')
 		{
-			if (ginfo->player.c_found == ginfo->c)
+			if (ginfo->player.c_found == ginfo->c_count)
 			{
 				move_player(ginfo, x, y, 'E');
 				*done = 1;
@@ -41,7 +40,7 @@ void	update_map(int x, int y, void **input, int *done)
 		}
 		else
 		{
-			if (ginfo->map[ginfo->player.py + y][ginfo->player.px + x] == 'C')
+			if (ginfo->map[ginfo->player.posy + y][ginfo->player.posx + x] == 'C')
 				ginfo->player.c_found++;
 			move_player(ginfo, x, y, 'P');
 		}
@@ -77,10 +76,10 @@ void	update_size(int32_t width, int32_t height, void *param)
 	t_gameinfo	*gameinfo;
 
 	gameinfo = param;
-	if (width / gameinfo->w > height / gameinfo->h)
-		gameinfo->size = height / gameinfo->h;
+	if (width / gameinfo->width > height / gameinfo->height)
+		gameinfo->size = height / gameinfo->height;
 	else
-		gameinfo->size = width / gameinfo->w;
+		gameinfo->size = width / gameinfo->width;
 	if (!mlx_resize_image(gameinfo->img, width, height))
 		exit(EXIT_FAILURE);
 	draw_image(gameinfo);
@@ -89,29 +88,26 @@ void	update_size(int32_t width, int32_t height, void *param)
 
 int32_t	main(int argc, char **argv)
 {
-	int			fd;
-	t_gameinfo	g;
+	t_gameinfo	gameinfo;
+	int			mlx_width;
+	int			mlx_height;
 
 	if (argc != 2 || correct_extension(argv[1], ".ber") != 0)
-		return (error_message("Error\nTry: ./so_long yourMapname.ber"));
-	fd = open(argv[1], O_RDONLY);
-	if (fd == -1)
-		return (error_message("Error\nInvalid file"));
-	init_gameinfo(&g, fd);
-	close(fd);
-	if (!g.map)
-		return (error_message("Error\nInvalid file"));
-	g.mlx = mlx_init(g.w * g.size, g.h * g.size, "SO_LONG", true);
-	if (!g.mlx)
-		exit(EXIT_FAILURE);
-	g.img = mlx_new_image(g.mlx, g.w * g.size, g.h * g.size);
-	if (!g.img)
-		exit(EXIT_FAILURE);
-	draw_image(&g);
-	mlx_image_to_window(g.mlx, g.img, 0, 0);
-	mlx_key_hook(g.mlx, &my_keyhook, &g);
-	mlx_resize_hook(g.mlx, &update_size, &g);
-	mlx_loop(g.mlx);
-	mlx_terminate(g.mlx);
-	return (free_return_map(&g), EXIT_SUCCESS);
+		exit_with_message("Error\nTry: ./so_long yourMapname.ber");
+	init_gameinfo(&gameinfo, argv[1]);
+	mlx_width = gameinfo.width * gameinfo.size;
+	mlx_height = gameinfo.height * gameinfo.size;
+	gameinfo.mlx = mlx_init(mlx_width, mlx_height, "SO_LONG", true);
+	if (!gameinfo.mlx)
+		exit_with_message("Error\nCreating mlx failed");
+	gameinfo.img = mlx_new_image(gameinfo.mlx, mlx_width, mlx_height);
+	if (!gameinfo.img)
+		exit_with_message("Error\nCreating new image failed");
+	draw_image(&gameinfo);
+	mlx_image_to_window(gameinfo.mlx, gameinfo.img, 0, 0);
+	mlx_key_hook(gameinfo.mlx, &my_keyhook, &gameinfo);
+	mlx_resize_hook(gameinfo.mlx, &update_size, &gameinfo);
+	mlx_loop(gameinfo.mlx);
+	mlx_terminate(gameinfo.mlx);
+	exit(EXIT_SUCCESS);
 }

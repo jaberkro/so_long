@@ -6,72 +6,47 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/04/04 16:52:27 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/04/09 14:24:15 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/04/09 18:08:51 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-t_gameinfo	free_return_map(t_gameinfo *to_free)
-{
-	int	i;
-
-	i = 0;
-	while (to_free->map[i])
-	{
-		free(to_free->map[i]);
-		i++;
-	}
-	free(to_free->map);
-	return (*to_free);
-}
-
-char	**read_split(int fd, int *width, int *height)
+char	**read_split(char *filename)
 {
 	char	*input;
 	char	**splitted;
 
-	*height = 0;
-	input = scan_file(fd);
-	if (input == NULL || ft_strncmp(input, "", 1) == 0 || !is_valid(input[0]))
-		return (NULL);
+	input = scan_file(filename);
+	if (input == NULL)
+		exit_with_message("Error\nInvalid file");
+	if (ft_strncmp(input, "", 1) == 0)
+		exit_with_message("Error\nEmpty file");
 	splitted = ft_split(input, '\n');
 	free(input);
 	if (!splitted)
-		return (NULL);
-	while (splitted[*height])
-		(*height)++;
-	*width = ft_strlen(splitted[0]);
+		exit_with_message("Error\nMalloc failed");
+	if (!splitted[0])
+		exit_with_message("Error\nFile only contains newline");
 	return (splitted);
 }
 
-t_player	init_player(void)
+void	init_gameinfo(t_gameinfo *gameinfo, char *filename)
 {
-	t_player	new_player;
-
-	new_player.px = 0;
-	new_player.py = 0;
-	new_player.c_found = 0;
-	new_player.moves = 0;
-	return (new_player);
-}
-
-t_gameinfo	init_gameinfo(t_gameinfo *gameinfo, int fd)
-{
-	gameinfo->player = init_player();
-	gameinfo->map = read_split(fd, &gameinfo->w, &gameinfo->h);
-	if (!gameinfo->map)
-		return (*gameinfo);
-	gameinfo->p = 0;
-	gameinfo->c = 0;
-	gameinfo->e = 0;
-	if (check_map(gameinfo) == 0)
-		return (free_return_map(gameinfo));
-	if (gameinfo->w < 30 && gameinfo->h < 30)
+	ft_bzero(&gameinfo->player, sizeof(t_player));
+	ft_bzero(&gameinfo->height, sizeof(int));
+	ft_bzero(&gameinfo->p_count, sizeof(int));
+	ft_bzero(&gameinfo->c_count, sizeof(int));
+	ft_bzero(&gameinfo->e_count, sizeof(int));
+	gameinfo->map = read_split(filename);
+	while (gameinfo->map[gameinfo->height])
+		gameinfo->height++;
+	gameinfo->width = ft_strlen(gameinfo->map[0]);
+	check_map(gameinfo);
+	if (gameinfo->width < 30 && gameinfo->height < 30)
 		gameinfo->size = 100;
-	else if (gameinfo->w < 60 && gameinfo->h < 60)
+	else if (gameinfo->width < 60 && gameinfo->height < 60)
 		gameinfo->size = 50;
 	else
 		gameinfo->size = 25;
-	return (*gameinfo);
 }

@@ -6,14 +6,15 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/03/31 12:42:18 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/04/04 14:37:10 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/04/09 18:37:25 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "so_long.h"
+#include <fcntl.h>
 
-char	*scan_file(int fd)
-{
+static char	*read_file(int fd)
+{	
 	char	buf[4096];
 	int		bytes_read;
 	char	*output;
@@ -37,5 +38,20 @@ char	*scan_file(int fd)
 		output = ft_strjoin(output, buf);
 		free(old_output);
 	}
+	return (output);
+}
+
+char	*scan_file(char	*filename)
+{
+	char	*output;
+	int		fd;
+
+	fd = open(filename, O_RDONLY);
+	if (fd == -1)
+		return (NULL);
+	output = read_file(fd);
+	if (!output)
+		return (NULL);
+	close(fd);
 	return (output);
 }
