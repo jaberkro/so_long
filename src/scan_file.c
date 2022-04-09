@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/03/31 12:42:18 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/04/09 18:37:25 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/04/09 18:43:11 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ static char	*read_file(int fd)
 		buf[bytes_read] = '\0';
 		old_output = output;
 		output = ft_strjoin(output, buf);
+		if (output == NULL)
+			return (NULL);
 		free(old_output);
 	}
 	return (output);
