@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/04/04 16:52:27 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/04/09 18:08:51 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/04/09 18:42:15 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ char	**read_split(char *filename)
 
 	input = scan_file(filename);
 	if (input == NULL)
-		exit_with_message("Error\nInvalid file");
+		exit_with_message("Error\nInvalid file or malloc failed");
 	if (ft_strncmp(input, "", 1) == 0)
 		exit_with_message("Error\nEmpty file");
 	splitted = ft_split(input, '\n');
