@@ -6,13 +6,13 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/03/31 15:25:29 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/04/04 22:35:15 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/04/09 14:13:35 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-static int	is_valid(char c)
+int	is_valid(char c)
 {
 	if (c == '0' || c == '1' || c == 'P' || c == 'C' || c == 'E')
 		return (1);
@@ -23,6 +23,16 @@ int	error_message(char *message)
 {
 	ft_printf("%s\n", message);
 	return (0);
+}
+
+int	correct_extension(char *check, char *end)
+{
+	int	checklen;
+	int	endlen;
+
+	checklen = ft_strlen(check);
+	endlen = ft_strlen(end);
+	return (ft_strncmp(check + checklen - endlen, end, endlen));
 }
 
 int	check_char(t_gameinfo *ginfo, int i, int j)

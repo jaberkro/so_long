@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/04/04 16:52:27 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/04/04 22:13:35 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/04/09 14:24:15 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ char	**read_split(int fd, int *width, int *height)
 
 	*height = 0;
 	input = scan_file(fd);
+	if (input == NULL || ft_strncmp(input, "", 1) == 0 || !is_valid(input[0]))
+		return (NULL);
 	splitted = ft_split(input, '\n');
 	free(input);
 	if (!splitted)

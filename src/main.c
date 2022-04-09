@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/02/10 14:01:18 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/04/04 22:35:55 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/04/09 14:08:03 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,9 @@ void	my_keyhook(mlx_key_data_t keydata, void *param)
 	else if (keydata.key == MLX_KEY_D && keydata.action == MLX_PRESS)
 		update_map(1, 0, &param, &done);
 	if (done || (keydata.key == MLX_KEY_ESCAPE && keydata.action == MLX_PRESS))
+	{
 		mlx_close_window(gameinfo->mlx);
+	}
 }
 
 void	update_size(int32_t width, int32_t height, void *param)
@@ -90,13 +92,15 @@ int32_t	main(int argc, char **argv)
 	int			fd;
 	t_gameinfo	g;
 
-	if (argc != 2)
-		return (error_message("Format:\n./so_long yourMapname.ber\n"));
+	if (argc != 2 || correct_extension(argv[1], ".ber") != 0)
+		return (error_message("Error\nTry: ./so_long yourMapname.ber"));
 	fd = open(argv[1], O_RDONLY);
+	if (fd == -1)
+		return (error_message("Error\nInvalid file"));
 	init_gameinfo(&g, fd);
 	close(fd);
 	if (!g.map)
-		return (EXIT_FAILURE);
+		return (error_message("Error\nInvalid file"));
 	g.mlx = mlx_init(g.w * g.size, g.h * g.size, "SO_LONG", true);
 	if (!g.mlx)
 		exit(EXIT_FAILURE);
@@ -109,6 +113,5 @@ int32_t	main(int argc, char **argv)
 	mlx_resize_hook(g.mlx, &update_size, &g);
 	mlx_loop(g.mlx);
 	mlx_terminate(g.mlx);
-	free_return_map(&g);
-	return (EXIT_SUCCESS);
+	return (free_return_map(&g), EXIT_SUCCESS);
 }
