@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/04/04 16:52:27 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/04/12 16:05:31 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/04/12 18:13:20 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,8 @@ void	init_gameinfo(t_gameinfo *gameinfo, char *filename)
 		gameinfo->height++;
 	gameinfo->width = ft_strlen(gameinfo->map[0]);
 	check_map(gameinfo);
-	width_size = 4500 / gameinfo->width / 2 / 10 * 10;
-	height_size = 2300 / gameinfo->height / 2 / 10 * 10;
+	width_size = 4500 / gameinfo->width * 0.55 / 10 * 10;
+	height_size = 2250 / gameinfo->height * 0.55 / 10 * 10;
 	if (width_size < height_size)
 		gameinfo->size = width_size;
 	else
