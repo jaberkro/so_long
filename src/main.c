@@ -6,48 +6,60 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/02/10 14:01:18 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/04/09 18:36:27 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/04/12 17:59:02 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-void	move_player(t_gameinfo *ginfo, int x, int y, char c)
+void	move_player(t_gameinfo *gameinfo, int x, int y, char c)
 {
-	ginfo->map[ginfo->player.posy][ginfo->player.posx] = '0';
-	ginfo->player.posy += y;
-	ginfo->player.posx += x;
-	ginfo->player.moves++;
-	ginfo->map[ginfo->player.posy][ginfo->player.posx] = c;
+	gameinfo->map[gameinfo->player.posy][gameinfo->player.posx] = '0';
+	gameinfo->player.posy += y;
+	gameinfo->player.posx += x;
+	gameinfo->player.moves++;
+	gameinfo->map[gameinfo->player.posy][gameinfo->player.posx] = c;
+}
+
+int	char_found_on_map(t_gameinfo *gameinfo, int x, int y, char c)
+{
+	int	x_check;
+	int	y_check;
+
+	x_check = gameinfo->player.posx + x;
+	y_check = gameinfo->player.posy + y;
+	if (gameinfo->map[y_check][x_check] == c)
+		return (1);
+	return (0);
 }
 
 void	update_map(int x, int y, void **input, int *done)
 {
-	t_gameinfo	*ginfo;
-	int			i;
+	t_gameinfo	*gameinfo;
+	int			play_x;
+	int			play_y;
 
-	i = 0;
-	ginfo = *input;
-	if (ginfo->map[ginfo->player.posy + y][ginfo->player.posx + x] != '1')
+	gameinfo = *input;
+	if (char_found_on_map(gameinfo, x, y, '1'))
+		return ;
+	if (char_found_on_map(gameinfo, x, y, 'E') && \
+		gameinfo->player.c_found == gameinfo->c_count)
 	{
-		if (ginfo->map[ginfo->player.posy + y][ginfo->player.posx + x] == 'E')
-		{
-			if (ginfo->player.c_found == ginfo->c_count)
-			{
-				move_player(ginfo, x, y, 'E');
-				*done = 1;
-			}
-		}
-		else
-		{
-			if (ginfo->map[ginfo->player.posy + y][ginfo->player.posx + x] == 'C')
-				ginfo->player.c_found++;
-			move_player(ginfo, x, y, 'P');
-		}
-		draw_image(ginfo);
-		mlx_image_to_window(ginfo->mlx, ginfo->img, 0, 0);
-		ft_printf("moves:%d\n", ginfo->player.moves);
+		move_player(gameinfo, x, y, 'E');
+		*done = 1;
 	}
+	else if (!char_found_on_map(gameinfo, x, y, 'E'))
+	{
+		if (char_found_on_map(gameinfo, x, y, 'C'))
+			gameinfo->player.c_found++;
+		move_player(gameinfo, x, y, 'P');
+		draw_image(gameinfo);
+	}
+	play_x = gameinfo->player.posx * gameinfo->size + gameinfo->size * 0.1;
+	play_y = gameinfo->player.posy * gameinfo->size + gameinfo->size * 0.1;
+	mlx_image_to_window(gameinfo->mlx, gameinfo->img, 0, 0);
+	mlx_image_to_window(gameinfo->mlx, gameinfo->player_img, play_x, play_y);
+	ft_printf("moves:%d\n", gameinfo->player.moves);
 }
 
 void	my_keyhook(mlx_key_data_t keydata, void *param)
@@ -66,47 +78,26 @@ void	my_keyhook(mlx_key_data_t keydata, void *param)
 	else if (keydata.key == MLX_KEY_D && keydata.action == MLX_PRESS)
 		update_map(1, 0, &param, &done);
 	if (done || (keydata.key == MLX_KEY_ESCAPE && keydata.action == MLX_PRESS))
-	{
 		mlx_close_window(gameinfo->mlx);
-	}
-}
-
-void	update_size(int32_t width, int32_t height, void *param)
-{
-	t_gameinfo	*gameinfo;
-
-	gameinfo = param;
-	if (width / gameinfo->width > height / gameinfo->height)
-		gameinfo->size = height / gameinfo->height;
-	else
-		gameinfo->size = width / gameinfo->width;
-	if (!mlx_resize_image(gameinfo->img, width, height))
-		exit(EXIT_FAILURE);
-	draw_image(gameinfo);
-	mlx_image_to_window(gameinfo->mlx, gameinfo->img, 0, 0);
 }
 
 int32_t	main(int argc, char **argv)
 {
 	t_gameinfo	gameinfo;
-	int			mlx_width;
-	int			mlx_height;
+	int			player_x;
+	int			player_y;
 
 	if (argc != 2 || correct_extension(argv[1], ".ber") != 0)
 		exit_with_message("Error\nTry: ./so_long yourMapname.ber");
 	init_gameinfo(&gameinfo, argv[1]);
-	mlx_width = gameinfo.width * gameinfo.size;
-	mlx_height = gameinfo.height * gameinfo.size;
-	gameinfo.mlx = mlx_init(mlx_width, mlx_height, "SO_LONG", true);
-	if (!gameinfo.mlx)
-		exit_with_message("Error\nCreating mlx failed");
-	gameinfo.img = mlx_new_image(gameinfo.mlx, mlx_width, mlx_height);
-	if (!gameinfo.img)
-		exit_with_message("Error\nCreating new image failed");
+	player_x = gameinfo.player.posx * gameinfo.size + gameinfo.size * 0.1;
+	player_y = gameinfo.player.posy * gameinfo.size + gameinfo.size * 0.1;
+	init_mlx_and_images(&gameinfo);
 	draw_image(&gameinfo);
+	draw_player(&gameinfo);
 	mlx_image_to_window(gameinfo.mlx, gameinfo.img, 0, 0);
+	mlx_image_to_window(gameinfo.mlx, gameinfo.player_img, player_x, player_y);
 	mlx_key_hook(gameinfo.mlx, &my_keyhook, &gameinfo);
-	mlx_resize_hook(gameinfo.mlx, &update_size, &gameinfo);
 	mlx_loop(gameinfo.mlx);
 	mlx_terminate(gameinfo.mlx);
 	exit(EXIT_SUCCESS);

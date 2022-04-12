@@ -6,23 +6,19 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/03/31 12:42:18 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/04/09 18:43:11 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/04/12 15:54:30 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 #include <fcntl.h>
 
-static char	*read_file(int fd)
+static char	*read_join(int fd, char *output)
 {	
 	char	buf[4096];
 	int		bytes_read;
-	char	*output;
 	char	*old_output;
 
-	output = ft_strdup("");
-	if (!output)
-		return (NULL);
 	while (42)
 	{
 		bytes_read = read(fd, buf, sizeof(buf) - 1);
@@ -51,7 +47,10 @@ char	*scan_file(char	*filename)
 	fd = open(filename, O_RDONLY);
 	if (fd == -1)
 		return (NULL);
-	output = read_file(fd);
+	output = ft_strdup("");
+	if (!output)
+		return (NULL);
+	output = read_join(fd, output);
 	if (!output)
 		return (NULL);
 	close(fd);
