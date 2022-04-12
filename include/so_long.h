@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/03/30 15:13:28 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/04/09 18:20:20 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/04/12 17:53:56 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ typedef struct s_gameinfo{
 	int			c_count;
 	int			e_count;
 	mlx_image_t	*img;
+	mlx_image_t	*player_img;
 	mlx_t		*mlx;
 }	t_gameinfo;
 
@@ -40,13 +41,14 @@ typedef struct s_loc{
 	int	y;
 }	t_loc;
 
-char		*scan_file(char *filename);
-void		init_gameinfo(t_gameinfo *gameinfo, char *filename);
-void		check_map(t_gameinfo *gameinfo);
-int			correct_extension(char *check, char *end);
-int			is_valid(char c);
-void		exit_with_message(char *message);
-void		draw_square(mlx_image_t *img, t_loc loc, int size, int color);
-void		draw_image(t_gameinfo *gameinfo);
+char	*scan_file(char *filename);
+void	init_gameinfo(t_gameinfo *gameinfo, char *filename);
+void	init_mlx_and_images(t_gameinfo *gameinfo);
+void	check_map(t_gameinfo *gameinfo);
+int		correct_extension(char *check, char *end);
+int		is_valid(char c);
+void	exit_with_message(char *message);
+void	draw_image(t_gameinfo *gameinfo);
+void	draw_player(t_gameinfo *gameinfo);
 
 #endif
