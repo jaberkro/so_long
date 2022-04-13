@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/02/10 14:01:18 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/04/13 17:33:53 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/04/13 17:39:50 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,10 @@ void	update_map(int x, int y, void **input)
 	t_loc	loc;
 
 	data = *input;
-	if (char_here(data, x, y, '1') || (char_here(data, x, y, 'E') && \
-		data->c_found != data->c_count))
+	if (char_here(data, x, y, '1') || \
+		(char_here(data, x, y, 'E') && data->c_found != data->c_count))
 		return ;
-	if (char_here(data, x, y, 'E') && \
-		data->c_found == data->c_count)
+	if (char_here(data, x, y, 'E') && data->c_found == data->c_count)
 	{
 		move_player(data, x, y, 'E');
 		mlx_close_window(data->mlx);
