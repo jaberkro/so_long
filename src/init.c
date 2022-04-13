@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/04/04 16:52:27 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/04/13 14:19:30 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/04/13 17:28:16 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ char	**read_split(char *filename)
 	if (ft_strncmp(input, "", 1) == 0)
 		exit_with_message("Error\nEmpty file");
 	if (consecutive_newline(input))
-		exit_with_message("Error\nConsecutive newline");;
+		exit_with_message("Error\nConsecutive newline");
 	splitted = ft_split(input, '\n');
 	free(input);
 	if (!splitted)
