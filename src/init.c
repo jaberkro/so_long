@@ -6,27 +6,27 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/04/04 16:52:27 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/04/12 18:13:20 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/04/13 14:06:37 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-void	init_mlx_and_images(t_gameinfo *gameinfo)
+void	init_mlx_and_images(t_data *data)
 {
 	int	mlx_width;
 	int	mlx_height;
 	int	xs_size;
 
-	mlx_width = gameinfo->width * gameinfo->size;
-	mlx_height = gameinfo->height * gameinfo->size;
-	xs_size = gameinfo->size * 0.8;
-	gameinfo->mlx = mlx_init(mlx_width, mlx_height, "SO_LONG", true);
-	if (!gameinfo->mlx)
+	mlx_width = data->width * data->size;
+	mlx_height = data->height * data->size;
+	xs_size = data->size * 0.8;
+	data->mlx = mlx_init(mlx_width, mlx_height, "SO_LONG", true);
+	if (!data->mlx)
 		exit_with_message("Error\nCreating mlx failed");
-	gameinfo->img = mlx_new_image(gameinfo->mlx, mlx_width, mlx_height);
-	gameinfo->player_img = mlx_new_image(gameinfo->mlx, xs_size, xs_size);
-	if (!gameinfo->img || !gameinfo->player_img)
+	data->img = mlx_new_image(data->mlx, mlx_width, mlx_height);
+	data->p_img = mlx_new_image(data->mlx, xs_size, xs_size);
+	if (!data->img || !data->p_img)
 		exit_with_message("Error\nCreating new image failed");
 }
 
@@ -36,8 +36,6 @@ char	**read_split(char *filename)
 	char	**splitted;
 
 	input = scan_file(filename);
-	if (input == NULL)
-		exit_with_message("Error\nInvalid file or malloc failed");
 	if (ft_strncmp(input, "", 1) == 0)
 		exit_with_message("Error\nEmpty file");
 	splitted = ft_split(input, '\n');
@@ -49,25 +47,35 @@ char	**read_split(char *filename)
 	return (splitted);
 }
 
-void	init_gameinfo(t_gameinfo *gameinfo, char *filename)
+void	set_zero(t_data *data)
+{
+	data->height = 0;
+	data->p_count = 0;
+	data->c_count = 0;
+	data->e_count = 0;
+	data->c_found = 0;
+	data->moves = 0;
+	ft_bzero(&data->map_loc, sizeof(t_loc));
+	ft_bzero(&data->img_loc, sizeof(t_loc));
+}
+
+void	init_data(t_data *data, char *filename)
 {
 	int	width_size;
 	int	height_size;
 
-	ft_bzero(&gameinfo->player, sizeof(t_player));
-	ft_bzero(&gameinfo->height, sizeof(int));
-	ft_bzero(&gameinfo->p_count, sizeof(int));
-	ft_bzero(&gameinfo->c_count, sizeof(int));
-	ft_bzero(&gameinfo->e_count, sizeof(int));
-	gameinfo->map = read_split(filename);
-	while (gameinfo->map[gameinfo->height])
-		gameinfo->height++;
-	gameinfo->width = ft_strlen(gameinfo->map[0]);
-	check_map(gameinfo);
-	width_size = 4500 / gameinfo->width * 0.55 / 10 * 10;
-	height_size = 2250 / gameinfo->height * 0.55 / 10 * 10;
+	set_zero(data);
+	data->map = read_split(filename);
+	while (data->map[data->height])
+		data->height++;
+	data->width = ft_strlen(data->map[0]);
+	check_map(data);
+	width_size = 4500 / data->width * 0.55 / 10 * 10;
+	height_size = 2250 / data->height * 0.55 / 10 * 10;
 	if (width_size < height_size)
-		gameinfo->size = width_size;
+		data->size = width_size;
 	else
-		gameinfo->size = height_size;
+		data->size = height_size;
+	data->img_loc.x = data->map_loc.x * data->size + data->size * 0.1;
+	data->img_loc.y = data->map_loc.y * data->size + data->size * 0.1;
 }

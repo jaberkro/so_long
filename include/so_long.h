@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/03/30 15:13:28 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/04/12 17:53:56 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/04/13 14:09:38 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,40 +15,36 @@
 # include "MLX42.h"
 # include "libft.h"
 
-typedef struct s_player{
-	int	posx;
-	int	posy;
-	int	moves;
-	int	c_found;
-}	t_player;
-
-typedef struct s_gameinfo{
-	int			width;
-	int			height;
-	int			size;
-	char		**map;
-	t_player	player;
-	int			p_count;
-	int			c_count;
-	int			e_count;
-	mlx_image_t	*img;
-	mlx_image_t	*player_img;
-	mlx_t		*mlx;
-}	t_gameinfo;
-
 typedef struct s_loc{
 	int	x;
 	int	y;
 }	t_loc;
 
+typedef struct s_data{
+	int			width;
+	int			height;
+	int			size;
+	char		**map;
+	int			p_count;
+	int			e_count;
+	int			c_count;
+	int			c_found;
+	int			moves;
+	t_loc		map_loc;
+	t_loc		img_loc;
+	mlx_image_t	*img;
+	mlx_image_t	*p_img;
+	mlx_t		*mlx;
+}	t_data;
+
 char	*scan_file(char *filename);
-void	init_gameinfo(t_gameinfo *gameinfo, char *filename);
-void	init_mlx_and_images(t_gameinfo *gameinfo);
-void	check_map(t_gameinfo *gameinfo);
+void	init_data(t_data *data, char *filename);
+void	init_mlx_and_images(t_data *data);
+void	check_map(t_data *data);
 int		correct_extension(char *check, char *end);
 int		is_valid(char c);
 void	exit_with_message(char *message);
-void	draw_image(t_gameinfo *gameinfo);
-void	draw_player(t_gameinfo *gameinfo);
+void	draw_image(t_data *data);
+void	draw_player(t_data *data);
 
 #endif

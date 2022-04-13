@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/03/31 15:52:24 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/04/12 17:44:05 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/04/13 13:55:54 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,66 +31,66 @@ static void	draw_square(mlx_image_t *img, t_loc loc, int size, int color)
 	}
 }
 
-void	draw_player(t_gameinfo *gameinfo)
+void	draw_player(t_data *data)
 {
 	t_loc	loc;
 
 	loc.x = 0;
 	loc.y = 0;
-	draw_square(gameinfo->player_img, loc, gameinfo->size * 0.8, BLUE);
+	draw_square(data->player_img, loc, data->size * 0.8, BLUE);
 }
 
-static void	draw_exit_and_collectables(t_gameinfo *gameinfo)
+static void	draw_exit_and_collectables(t_data *data)
 {
 	int		i;
 	int		j;
 	t_loc	loc;
 
 	i = 0;
-	while (i < gameinfo->height)
+	while (i < data->height)
 	{
-		loc.y = i * gameinfo->size + gameinfo->size / 10;
+		loc.y = i * data->size + data->size / 10;
 		j = 0;
-		while (j < gameinfo->width)
+		while (j < data->width)
 		{
-			loc.x = j * gameinfo->size + gameinfo->size / 10;
-			if (gameinfo->map[i][j] == 'E')
-				draw_square(gameinfo->img, loc, gameinfo->size * 0.8, YELLOW);
-			if (gameinfo->map[i][j] == 'C')
-				draw_square(gameinfo->img, loc, gameinfo->size * 0.8, RED);
+			loc.x = j * data->size + data->size / 10;
+			if (data->map[i][j] == 'E')
+				draw_square(data->img, loc, data->size * 0.8, YELLOW);
+			if (data->map[i][j] == 'C')
+				draw_square(data->img, loc, data->size * 0.8, RED);
 			j++;
 		}
 		i++;
 	}
 }
 
-static void	draw_background(t_gameinfo *gameinfo)
+static void	draw_background(t_data *data)
 {
 	int		i;
 	int		j;
 	t_loc	loc;
 
 	i = 0;
-	while (i < gameinfo->height)
+	while (i < data->height)
 	{
-		loc.y = i * gameinfo->size;
+		loc.y = i * data->size;
 		j = 0;
-		while (j < gameinfo->width)
+		while (j < data->width)
 		{
-			loc.x = j * gameinfo->size;
-			if (gameinfo->map[i][j] == '1' || (gameinfo->map[i][j] == 'E' && \
-				gameinfo->c_count != gameinfo->player.c_found))
-				draw_square(gameinfo->img, loc, gameinfo->size, BLACK);
+			loc.x = j * data->size;
+			if (data->map[i][j] == '1' || (data->map[i][j] == 'E' && \
+				data->c_count != data->c_found))
+				draw_square(data->img, loc, data->size, BLACK);
 			else
-				draw_square(gameinfo->img, loc, gameinfo->size, WHITE);
+				draw_square(data->img, loc, data->size, WHITE);
 			j++;
 		}
 		i++;
 	}
 }
 
-void	draw_image(t_gameinfo *gameinfo)
+void	draw_image(t_data *data)
 {
-	draw_background(gameinfo);
-	draw_exit_and_collectables(gameinfo);
+	draw_background(data);
+	draw_exit_and_collectables(data);
 }

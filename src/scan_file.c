@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/03/31 12:42:18 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/04/12 15:54:30 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/04/13 13:08:37 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,17 +23,14 @@ static char	*read_join(int fd, char *output)
 	{
 		bytes_read = read(fd, buf, sizeof(buf) - 1);
 		if (bytes_read < 0)
-		{
-			free(output);
-			return (NULL);
-		}
+			exit_with_message("Error\nInvalid file");
 		if (!bytes_read)
 			break ;
 		buf[bytes_read] = '\0';
 		old_output = output;
 		output = ft_strjoin(output, buf);
 		if (output == NULL)
-			return (NULL);
+			exit_with_message("Error\nMalloc failed");
 		free(old_output);
 	}
 	return (output);
@@ -46,13 +43,11 @@ char	*scan_file(char	*filename)
 
 	fd = open(filename, O_RDONLY);
 	if (fd == -1)
-		return (NULL);
+		exit_with_message("Error\nInvalid file");
 	output = ft_strdup("");
 	if (!output)
-		return (NULL);
+		exit_with_message("Error\nMalloc failed");
 	output = read_join(fd, output);
-	if (!output)
-		return (NULL);
 	close(fd);
 	return (output);
 }
