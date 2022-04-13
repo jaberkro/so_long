@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/04/04 16:52:27 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/04/13 14:06:37 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/04/13 14:19:30 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,23 @@ void	init_mlx_and_images(t_data *data)
 		exit_with_message("Error\nCreating new image failed");
 }
 
+int	consecutive_newline(char *input)
+{
+	char	last;
+	int		i;
+
+	i = 0;
+	last = '\n';
+	while (input[i])
+	{
+		if (input[i] == last && input[i] == '\n')
+			return (1);
+		last = input[i];
+		i++;
+	}
+	return (0);
+}
+
 char	**read_split(char *filename)
 {
 	char	*input;
@@ -38,6 +55,8 @@ char	**read_split(char *filename)
 	input = scan_file(filename);
 	if (ft_strncmp(input, "", 1) == 0)
 		exit_with_message("Error\nEmpty file");
+	if (consecutive_newline(input))
+		exit_with_message("Error\nConsecutive newline");;
 	splitted = ft_split(input, '\n');
 	free(input);
 	if (!splitted)
