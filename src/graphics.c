@@ -6,7 +6,7 @@
 /*   By: jaberkro <jaberkro@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/03/31 15:52:24 by jaberkro      #+#    #+#                 */
-/*   Updated: 2022/04/13 13:55:54 by jaberkro      ########   odam.nl         */
+/*   Updated: 2022/04/13 14:21:03 by jaberkro      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	draw_player(t_data *data)
 
 	loc.x = 0;
 	loc.y = 0;
-	draw_square(data->player_img, loc, data->size * 0.8, BLUE);
+	draw_square(data->p_img, loc, data->size * 0.8, BLUE);
 }
 
 static void	draw_exit_and_collectables(t_data *data)
